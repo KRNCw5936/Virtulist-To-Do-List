@@ -13,7 +13,6 @@ return new class extends Migration
             $table->foreignId('task_list_id')->constrained()->onDelete('cascade');
             $table->string('name');
             $table->enum('priority', ['Tinggi', 'Sedang', 'Rendah']);
-            $table->string('category');
             $table->date('start_date');
             $table->date('end_date');
             $table->enum('status', ['Tugas', 'Progres', 'Selesai'])->default('Tugas');

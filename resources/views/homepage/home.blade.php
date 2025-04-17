@@ -4,15 +4,15 @@
 
 @section('content')
     <div class="container">
-        <h3 class="fw-bold mt-4 mb-3"><i class="bi bi-lightbulb"></i> Ayo buat to-do list mu!</h3>
+        <h3 class="mt-4 mb-3"><i class="bi bi-lightbulb"></i> Ayo buat tugas mu!</h3>
         <!-- SECTION: RECENT TASK LISTS -->
-        <h5 class="mt-4">Recent Task Lists</h5>
+        <h5 class="mt-4">Buat Tugas Mu di Sini!</h5>
         <div class="row g-3"> 
             <!-- Tombol Tambah Task List -->
             <div class="col-6 col-md-4 col-lg-2"> 
                 <div class="card p-3 text-center shadow-sm d-flex align-items-center justify-content-center" 
                     style="height: 150px; background: linear-gradient(135deg, #FFA500, #800080, #00BFFF); color: white;">
-                    <a href="{{ route('task-lists.create') }}" class="btn btn-outline-light">+ Create To-Do</a>
+                    <a href="{{ route('task-lists.create') }}" class="btn btn-outline-light">+ Buat Tugas</a>
                 </div>
             </div>
             

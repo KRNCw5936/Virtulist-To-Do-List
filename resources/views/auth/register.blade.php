@@ -129,30 +129,26 @@ a:hover {
         </div>
         <div class="container">
             <div class="app-name">VIRTULIST</div>
-            <h2>Account Registration</h2>
+            <h2>Pendaftaran Akun</h2>
             <form action="{{ route('register') }}" method="POST">
                 @csrf
                 <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
                     <input type="text" name="username" id="username" class="form-control" placeholder="Username" required>
                 </div>
                 <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
                     <input type="email" name="email" id="email" class="form-control" placeholder="Email" required>
                 </div>
                 <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+                    <input type="password" name="password" id="password" class="form-control" placeholder="Kata Sandi" required>
                 </div>
                 <div class="mb-3">
-                    <label for="password_confirmation" class="form-label">Confirm Password</label>
-                    <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="Confirm Password" required>
+                    <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="Konfirmasi Kata Sandi" required>
                 </div>
                 <div class="mb-3">
-                    <button type="submit" class="btn btn-primary">Register</button>
+                    <button type="submit" class="btn btn-primary">Daftar</button>
                 </div>
                 <div class="text-center">
-                    <p>Already have an account? <a href="{{ route('login') }}">Login here!</a></p>
+                    <p>Sudah punya akun?  <a href="{{ route('login') }}">Masuk di sini!</a></p>
                 </div>
             </form>
         </div>

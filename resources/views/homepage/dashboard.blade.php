@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <header>
-        <h1><i class="fas fa-tasks"></i> Dashboard</h1>
+        <h1><i class="fas fa-tasks"></i> Dasbor</h1>
         <div class="date-display">{{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}</div>
     </header>
     <div class="card shadow-sm position-relative" style="border-radius: 15px; overflow: hidden;">

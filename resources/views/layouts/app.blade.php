@@ -145,15 +145,15 @@
     <div class="sidebar" id="sidebar">
         <a href="{{ route('task-lists.index') }}" class="brand">VIRTULIST</a>
         @auth
-        <a href="{{ route('homepage.dashboard') }}" class="ajax-link @if(request()->routeIs('homepage.dashboard')) active @endif">Dashboard</a>
-        <a href="{{ route('homepage.home') }}" class="ajax-link @if(request()->routeIs('homepage.home')) active @endif">Buat To-Do</a>
-        <a href="{{ route('task-lists.index') }}" class="ajax-link @if(request()->routeIs('task-lists.index')) active @endif">List Tugas</a>
+        <a href="{{ route('homepage.dashboard') }}" class="ajax-link @if(request()->routeIs('homepage.dashboard')) active @endif">Dasbor</a>
+        <a href="{{ route('homepage.home') }}" class="ajax-link @if(request()->routeIs('homepage.home')) active @endif">Buat Tugas</a>
+        <a href="{{ route('task-lists.index') }}" class="ajax-link @if(request()->routeIs('task-lists.index')) active @endif">Daftar Tugas</a>
         <a href="{{ route('calendar.index') }}" class="ajax-link @if(request()->routeIs('calendar.index')) active @endif">Kalender</a>
         <a href="{{ route('task-lists.completed') }}" class="ajax-link @if(request()->routeIs('task-lists.completed')) active @endif">Tugas Selesai</a>        
         <form action="{{ route('logout') }}" method="POST" class="d-flex align-items-center mt-3 px-3">
             @csrf
             <button type="submit" class="btn btn-danger btn-sm px-4 d-flex align-items-center w-100">
-                <i class="bi bi-box-arrow-right me-2"></i> Logout
+                <i class="bi bi-box-arrow-right me-2"></i> Keluar
             </button>
         </form>        
         @endauth

@@ -73,11 +73,11 @@
                                 {{ $startDate }} - {{ $endDate }}
                             </p>
                             
-                            <a href="{{ route('task-lists.toggle-status', $task->id) }}" 
+                            {{-- <a href="{{ route('task-lists.toggle-status', $task->id) }}" 
                                class="btn btn-success rounded-pill btn-sm px-3 py-1 task-done-btn"
                                onclick="event.preventDefault(); document.getElementById('toggle-status-{{ $task->id }}').submit();">
                                 Selesai
-                            </a>
+                            </a> --}}
 
                             <form id="toggle-status-{{ $task->id }}" 
                                   action="{{ route('task-lists.toggle-status', $task->id) }}" 

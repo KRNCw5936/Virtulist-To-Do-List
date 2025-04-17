@@ -216,17 +216,17 @@ a:hover {
                 @enderror
                 
                 <div class="password-container">
-                    <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
+                    <input type="password" class="form-control" name="password" id="password" placeholder="Kata Sandi" required>
                     <i class="eye-icon" id="eye-icon" onclick="togglePassword()">👁️</i>
                 </div>
                 @error('password')
                     <div style="color: red; font-size: 14px;">{{ $message }}</div>
                 @enderror
                 
-                <button type="submit" class="btn-primary">Login</button>
+                <button type="submit" class="btn-primary">Masuk</button>
             </form>
             <div class="text-center">
-                <p>Atau Login dengan Google</p>
+                <p>Atau Masuk dengan Google</p>
                 <a href="{{ route('auth.google') }}" class="btn-google">
                     <img src="{{ asset('assets/image/google-logo.png') }}" alt="Google Logo">
                     <span>Google</span>

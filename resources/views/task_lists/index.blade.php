@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container py-5 px-4">
-    <h2 class="text-black mb-4">📋 Tasks List</h2>
+    <h2 class="text-black mb-4">📋 Daftar Tugas</h2>
 
     @php
         $taskCategories = [

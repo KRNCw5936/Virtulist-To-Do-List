@@ -7,7 +7,7 @@
     <!-- Tombol Kembali -->
     <div class="mb-3">
         <a href="{{ route('homepage.home') }}" class="btn btn-outline-secondary d-inline-flex align-items-center">
-            <i class="bi bi-arrow-left me-2"></i> Kembali ke Daftar Task List
+            <i class="bi bi-arrow-left me-2"></i> Kembali ke Daftar Tugas
         </a>
     </div>
 
@@ -27,7 +27,7 @@
                     </a>
                     <!-- Tombol Edit Task List tanpa background -->
                     <a href="{{ route('task-lists.edit', $taskList->id) }}" class="btn btn-outline-warning d-flex align-items-center px-4 py-2 rounded-3">
-                        <i class="bi bi-pencil-square me-2"></i>Edit Task List
+                        <i class="bi bi-pencil-square me-2"></i>Edit Kartu Tugas
                     </a>
                 </div>
             </div>

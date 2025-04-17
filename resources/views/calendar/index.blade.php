@@ -105,6 +105,28 @@
         border: 2px solid #0066ec !important;
         color: #fff !important;
     }
+
+    /* Titik deadline */
+    .deadline-dot {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 6px;
+        vertical-align: middle;
+    }
+
+    .dot-red {
+        background-color: red;
+    }
+
+    .dot-yellow {
+        background-color: orange;
+    }
+
+    .dot-green {
+        background-color: green;
+    }
 </style>
 
 <script>
@@ -129,10 +151,9 @@
 
             eventDidMount: function(info) {
                 let eventText = info.el.querySelector('.fc-event-title');
-
                 if (!eventText) return;
 
-                let eventType = info.event.title.split(' ')[0]; // Ambil ikon sebagai identifier
+                let eventType = info.event.title.split(' ')[0];
 
                 if (eventType === '🎓') {
                     info.el.classList.add('event-sekolah');
@@ -141,6 +162,24 @@
                 } else if (eventType === '💼') {
                     info.el.classList.add('event-pekerjaan');
                 }
+
+                // --- Tambahan indikator tenggat waktu ---
+                const now = new Date();
+                const end = new Date(info.event.end || info.event.start);
+                const diffInDays = Math.floor((end - now) / (1000 * 60 * 60 * 24));
+
+                let dot = document.createElement('span');
+                dot.classList.add('deadline-dot');
+
+                if (end < now) {
+                    dot.classList.add('dot-red');
+                } else if (diffInDays === 0 || diffInDays === 1) {
+                    dot.classList.add('dot-yellow');
+                } else {
+                    dot.classList.add('dot-green');
+                }
+
+                eventText.prepend(dot);
             }
         });
 
