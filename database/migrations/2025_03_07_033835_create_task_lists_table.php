@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('task_lists', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->enum('project_type', ['sekolah', 'pekerjaan', 'pribadi']);
+            $table->enum('project_type', ['School', 'Work', 'Private']);
             $table->text('description')->nullable(); // Tambahkan kolom deskripsi
             $table->date('start_date');
             $table->date('end_date');

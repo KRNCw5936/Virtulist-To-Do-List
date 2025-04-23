@@ -1,26 +1,26 @@
 @extends('layouts.app')
 
-@section('title', 'Beranda')
+@section('title', 'Create To-Do')
 
 @section('content')
     <div class="container">
-        <h3 class="mt-4 mb-3"><i class="bi bi-lightbulb"></i> Ayo buat tugas mu!</h3>
+        <h3 class="mt-4 mb-3"><i class="bi bi-lightbulb"></i> Come on, do your homework!</h3>
         <!-- SECTION: RECENT TASK LISTS -->
-        <h5 class="mt-4">Buat Tugas Mu di Sini!</h5>
+        <h5 class="mt-4">Make Your Task Here!</h5>
         <div class="row g-3"> 
             <!-- Tombol Tambah Task List -->
             <div class="col-6 col-md-4 col-lg-2"> 
                 <div class="card p-3 text-center shadow-sm d-flex align-items-center justify-content-center" 
                     style="height: 150px; background: linear-gradient(135deg, #FFA500, #800080, #00BFFF); color: white;">
-                    <a href="{{ route('task-lists.create') }}" class="btn btn-outline-light">+ Buat Tugas</a>
+                    <a href="{{ route('task-lists.create') }}" class="btn btn-outline-light">+ Create To-Do</a>
                 </div>
             </div>
             
             @php
                 $taskColors = [
-                    'sekolah' => ['#1E90FF', '#104E8B', '🎓'], // Biru (Sekolah)
-                    'pribadi' => ['#32CD32', '#228B22', '🌱'], // Hijau (Pribadi)
-                    'pekerjaan' => ['#00CED1', '#008B8B', '💼'], // Cyan (Pekerjaan)
+                    'school' => ['#1E90FF', '#104E8B', '🎓'], // Biru (Sekolah)
+                    'private' => ['#32CD32', '#228B22', '🌱'], // Hijau (Pribadi)
+                    'work' => ['#00CED1', '#008B8B', '💼'], // Cyan (Pekerjaan)
                 ];
             @endphp
 
@@ -64,18 +64,18 @@
                                     <img src="{{ asset('assets/image/three-dots-icon.png') }}" alt="Menu" width="20" height="20">
                                 </button>                            
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenu{{ $taskList->id }}">
-                                    <li><a class="dropdown-item" href="{{ route('task-lists.tasks.index', $taskList->id) }}"><i class="bi bi-eye"></i> Lihat Task</a></li>
-                                    <li><a class="dropdown-item" href="{{ route('task-lists.edit', $taskList->id) }}"><i class="bi bi-pencil"></i> Edit Task List</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('task-lists.tasks.index', $taskList->id) }}"><i class="bi bi-eye"></i> See Task</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('task-lists.edit', $taskList->id) }}"><i class="bi bi-pencil"></i> Edit Task</a></li>
                                     <li>
                                         <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#taskListModal{{ $taskList->id }}">
-                                            <i class="bi bi-info-circle"></i> Lihat Task List
+                                            <i class="bi bi-info-circle"></i> See To-Do
                                         </button>
                                     </li>
                                     <li>
                                         <form action="{{ route('task-lists.destroy', $taskList->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus task list ini?');">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="dropdown-item text-danger"><i class="bi bi-trash"></i> Hapus Task List</button>
+                                            <button type="submit" class="dropdown-item text-danger"><i class="bi bi-trash"></i> Delete Task</button>
                                         </form>
                                     </li>
                                     <li>
@@ -99,18 +99,18 @@
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="taskListModalLabel{{ $taskList->id }}">Detail Task List</h5>
+                                <h5 class="modal-title" id="taskListModalLabel{{ $taskList->id }}">Details Task</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <p><strong>Nama Task List:</strong> {{ $taskList->name }}</p>
-                                <p><strong>Jenis Proyek:</strong> {{ $taskList->project_type ?? '-' }}</p>
-                                <p><strong>Deskripsi:</strong> {{ $taskList->description ?? 'Tidak ada deskripsi' }}</p>
-                                <p><strong>Tanggal Mulai:</strong> {{ \Carbon\Carbon::parse($taskList->start_date)->format('d/m/Y') }}</p>
-                                <p><strong>Tanggal Selesai:</strong> {{ \Carbon\Carbon::parse($taskList->end_date)->format('d/m/Y') }}</p>
+                                <p><strong>Task Name:</strong> {{ $taskList->name }}</p>
+                                <p><strong>Project Type:</strong> {{ $taskList->project_type ?? '-' }}</p>
+                                <p><strong>Description:</strong> {{ $taskList->description ?? 'Tidak ada deskripsi' }}</p>
+                                <p><strong>Start Date:</strong> {{ \Carbon\Carbon::parse($taskList->start_date)->format('d/m/Y') }}</p>
+                                <p><strong>End Date:</strong> {{ \Carbon\Carbon::parse($taskList->end_date)->format('d/m/Y') }}</p>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
@@ -121,7 +121,7 @@
             <!-- Jika Tidak Ada Task List -->
             @if ($taskLists->isEmpty())
                 <div class="w-100 text-center">
-                    <p class="text-muted">Belum ada Task List yang Dibuat</p>
+                    <p class="text-muted">No Task List Created Yet</p>
                 </div>
             @endif
         </div>        

@@ -4,21 +4,21 @@
 
 @section('content')
 <div class="container py-5 px-4">
-    <h2 class="text-black mb-4">📋 Daftar Tugas</h2>
+    <h2 class="text-black mb-4">📋 To-Do List</h2>
 
     @php
         $taskCategories = [
-            '📅 Hari Ini' => $todayTasks,
-            '📆 Kemarin' => $yesterdayTasks,
-            '📖 2–7 Hari Lalu' => $lastWeekTasks,
-            '🗂️ 8–30 Hari Lalu' => $lastMonthTasks,
-            '📚 Lebih dari 30 Hari Lalu' => $olderTasks
+            '📅 Today' => $todayTasks,
+            '📆 Yesterday' => $yesterdayTasks,
+            '📖 2–7 Days Ago' => $lastWeekTasks,
+            '🗂️ 8–30 Days Ago' => $lastMonthTasks,
+            '📚 More than 30 Days Ago' => $olderTasks
         ];
 
         $taskColors = [
-            'sekolah' => ['#1E90FF', '#104E8B', '🎓'],
-            'pribadi' => ['#32CD32', '#228B22', '🌱'],
-            'pekerjaan' => ['#00CED1', '#008B8B', '💼'],
+            'School' => ['#1E90FF', '#104E8B', '🎓'],
+            'Private' => ['#32CD32', '#228B22', '🌱'],
+            'Work' => ['#00CED1', '#008B8B', '💼'],
         ];
     @endphp
 
@@ -51,7 +51,7 @@
                                         <ul class="dropdown-menu dropdown-menu-end" 
                                             aria-labelledby="dropdownMenuButton{{ $task->id }}">
                                             <li><a class="dropdown-item" href="{{ route('task-lists.tasks.index', $task->id) }}">
-                                                <i class="bi bi-eye me-2"></i> Lihat</a></li>
+                                                <i class="bi bi-eye me-2"></i> See</a></li>
                                             <li><a class="dropdown-item" href="{{ route('task-lists.edit', $task->id) }}">
                                                 <i class="bi bi-pencil me-2"></i> Edit</a></li>
                                             <li>
@@ -59,7 +59,7 @@
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="dropdown-item text-danger">
-                                                        <i class="bi bi-trash me-2"></i> Hapus
+                                                        <i class="bi bi-trash me-2"></i> Delete
                                                     </button>
                                                 </form>
                                             </li>
@@ -74,7 +74,7 @@
                                 <a href="{{ route('task-lists.toggle-status', $task->id) }}"
                                    class="badge {{ $task->is_complete ? 'bg-success' : 'bg-warning' }} text-decoration-none"
                                    onclick="event.preventDefault(); document.getElementById('toggle-status-{{ $task->id }}').submit();">
-                                    {{ $task->is_complete ? 'Selesai' : 'Progres' }}
+                                    {{ $task->is_complete ? 'Complete' : 'Progress' }}
                                 </a>
 
                                 <form id="toggle-status-{{ $task->id }}" action="{{ route('task-lists.toggle-status', $task->id) }}" method="POST" style="display: none;">

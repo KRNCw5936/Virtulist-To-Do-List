@@ -75,19 +75,22 @@ class AuthController extends Controller
         $user = User::where('email', $googleUser->getEmail())->first();
     
         if (!$user) {
-            // Jika belum ada, buat user baru
+            // Jika belum ada, buat user baru dengan provider google
             $user = User::create([
                 'username' => $googleUser->getName(),
                 'email' => $googleUser->getEmail(),
-                'phone_number' => null, // Google tidak memberikan nomor telepon
-                'password' => Hash::make(uniqid()), // Buat password acak
+                'phone_number' => null,
+                'password' => Hash::make(uniqid()), // password acak
+                'provider' => 'google', // <== Tambahan penting di sini
             ]);
+        } else {
+            // Jika user sudah ada tapi belum ada provider-nya, set provider-nya
+            if (!$user->provider) {
+                $user->update(['provider' => 'google']);
+            }
         }
     
-        // Login user
         Auth::login($user, true);
-        // Auth::login($user);
-    
         return redirect()->route('homepage.dashboard');
     }
     

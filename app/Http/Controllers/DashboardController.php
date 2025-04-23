@@ -22,15 +22,15 @@ class DashboardController extends Controller
             'ongoingTask' => Task::where('user_id', $userId)->where('in_progress', true)->count(),
     
             'statusCounts' => [
-                'tugas' => Task::where('user_id', $userId)->where('status', 'tugas')->count(),
+                'task' => Task::where('user_id', $userId)->where('status', 'tugas')->count(),
                 'progress' => Task::where('user_id', $userId)->where('in_progress', true)->count(),
                 'completed' => Task::where('user_id', $userId)->where('is_completed', true)->count(),
             ],
     
             'distributionCounts' => [
-                'Tinggi' => Task::where('user_id', $userId)->where('priority', 'Tinggi')->count(),
-                'Sedang' => Task::where('user_id', $userId)->where('priority', 'Sedang')->count(),
-                'Rendah' => Task::where('user_id', $userId)->where('priority', 'Rendah')->count(),
+                'High' => Task::where('user_id', $userId)->where('priority', 'Tinggi')->count(),
+                'Medium' => Task::where('user_id', $userId)->where('priority', 'Sedang')->count(),
+                'Low' => Task::where('user_id', $userId)->where('priority', 'Rendah')->count(),
             ],
         ]);
     }

@@ -6,6 +6,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -22,6 +25,13 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Google Authentication Routes
 Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
+
+
+Route::get('/forgot-password', [ForgotPasswordController::class, 'showRequestForm'])->name('password.request');
+Route::post('/forgot-password', [ForgotPasswordController::class, 'handleRequest']);
+
+Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword']);
 
 // ========================
 // PROTECTED ROUTES (REQUIRES LOGIN)
@@ -55,6 +65,8 @@ Route::middleware('auth')->group(function () {
         Route::patch('{task}/update-status', [TaskController::class, 'updateStatus'])
         ->name('tasks.updateStatus');
     });
+    Route::get('/notifikasi', [TaskListController::class, 'notif'])->name('homepage.notif');
+    Route::patch('/task-lists/{taskList}/status', [TaskListController::class, 'updateStatus'])->name('task-lists.update-status');
     Route::patch('/task-lists/{taskList}/toggle-pin', [TaskListController::class, 'togglePin'])->name('task-lists.togglePin');
     Route::patch('/task-lists/{taskList}/toggle-status', [TaskListController::class, 'toggleStatus'])->name('task-lists.toggle-status');
     Route::get('/task-lists/completed', [TaskListController::class, 'completedTasks'])->name('task-lists.completed');
@@ -69,3 +81,4 @@ Route::middleware('auth')->group(function () {
 Route::get('/', function () {
     return redirect()->route('login');
 })->name('root');
+

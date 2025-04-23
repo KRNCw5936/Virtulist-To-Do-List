@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Daftar Tugas')
+@section('title', 'Task')
 
 @section('content')
 <div class="container">
     <!-- Tombol Kembali -->
     <div class="mb-3">
         <a href="{{ route('homepage.home') }}" class="btn btn-outline-secondary d-inline-flex align-items-center">
-            <i class="bi bi-arrow-left me-2"></i> Kembali ke Daftar Tugas
+            <i class="bi bi-arrow-left me-2"></i> Back
         </a>
     </div>
 
@@ -23,11 +23,11 @@
                 <div class="d-flex justify-content-center gap-3">
                     <!-- Tombol Tambah Tugas tanpa background -->
                     <a href="{{ route('task-lists.tasks.create', $taskList->id) }}" class="btn btn-outline-success d-flex align-items-center px-4 py-2 rounded-3">
-                        <i class="bi bi-plus-circle me-2"></i>Tambah Tugas
+                        <i class="bi bi-plus-circle me-2"></i>Add Tasks
                     </a>
                     <!-- Tombol Edit Task List tanpa background -->
                     <a href="{{ route('task-lists.edit', $taskList->id) }}" class="btn btn-outline-warning d-flex align-items-center px-4 py-2 rounded-3">
-                        <i class="bi bi-pencil-square me-2"></i>Edit Kartu Tugas
+                        <i class="bi bi-pencil-square me-2"></i>Edit To-Do
                     </a>
                 </div>
             </div>
@@ -39,7 +39,7 @@
         <!-- Kolom Tugas -->
         <div class="col-md-4">
             <div class="bg-white shadow-sm rounded-4 p-3 mb-3 text-center border-start border-4 border-primary">
-                <h5 class="mb-0 text-primary fw-semibold">📋 Tugas Baru</h5>
+                <h5 class="mb-0 text-primary fw-semibold">📋 New Tasks</h5>
             </div>
             <div id="task-pending" class="task-container bg-body-secondary p-3 rounded-4 border border-primary-subtle" data-task-list-id="{{ $taskList->id }}">
                 @foreach($tasks->where('is_completed', false)->where('in_progress', false) as $task)
@@ -60,7 +60,7 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="dropdown-item text-danger">
-                                                <i class="bi bi-trash3 me-2"></i> Hapus
+                                                <i class="bi bi-trash3 me-2"></i> Delete
                                             </button>
                                         </form>
                                     </li>
@@ -76,11 +76,11 @@
                             </p>               
                             <p>
                                 @if($task->priority === 'Tinggi')
-                                    <span class="text-danger"><i class="bi bi-flag-fill me-1"></i> Tinggi</span>
+                                    <span class="text-danger"><i class="bi bi-flag-fill me-1"></i> High</span>
                                 @elseif($task->priority === 'Sedang')
-                                    <span class="text-warning"><i class="bi bi-flag-fill me-1"></i> Sedang</span>
+                                    <span class="text-warning"><i class="bi bi-flag-fill me-1"></i> Medium</span>
                                 @else
-                                    <span class="text-success"><i class="bi bi-flag-fill me-1"></i> Rendah</span>
+                                    <span class="text-success"><i class="bi bi-flag-fill me-1"></i> Low</span>
                                 @endif
                             </p>                    
                         </div>
@@ -92,7 +92,7 @@
         <!-- Kolom Progres -->
         <div class="col-md-4">
             <div class="bg-white shadow-sm rounded-4 p-3 mb-3 text-center border-start border-4 border-warning">
-                <h5 class="mb-0 text-warning fw-semibold">⚙️ Sedang Dikerjakan</h5>
+                <h5 class="mb-0 text-warning fw-semibold">⚙️ In Progress</h5>
             </div>
             <div id="task-progress" class="task-container bg-body-secondary p-3 rounded-4 border border-warning-subtle" data-task-list-id="{{ $taskList->id }}">
                 @foreach($tasks->where('is_completed', false)->where('in_progress', true) as $task)
@@ -113,7 +113,7 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="dropdown-item text-danger">
-                                                <i class="bi bi-trash3 me-2"></i> Hapus
+                                                <i class="bi bi-trash3 me-2"></i> Delete
                                             </button>
                                         </form>
                                     </li>
@@ -129,11 +129,11 @@
                             </p>               
                             <p>
                                 @if($task->priority === 'Tinggi')
-                                    <span class="text-danger"><i class="bi bi-flag-fill me-1"></i> Tinggi</span>
+                                    <span class="text-danger"><i class="bi bi-flag-fill me-1"></i> High</span>
                                 @elseif($task->priority === 'Sedang')
-                                    <span class="text-warning"><i class="bi bi-flag-fill me-1"></i> Sedang</span>
+                                    <span class="text-warning"><i class="bi bi-flag-fill me-1"></i> Medium</span>
                                 @else
-                                    <span class="text-success"><i class="bi bi-flag-fill me-1"></i> Rendah</span>
+                                    <span class="text-success"><i class="bi bi-flag-fill me-1"></i> Low</span>
                                 @endif
                             </p>                    
                         </div>
@@ -145,7 +145,7 @@
         <!-- Kolom Selesai -->
         <div class="col-md-4">
             <div class="bg-white shadow-sm rounded-4 p-3 mb-3 text-center border-start border-4 border-success">
-                <h5 class="mb-0 text-success fw-semibold">✅ Selesai</h5>
+                <h5 class="mb-0 text-success fw-semibold">✅ Completed</h5>
             </div>
             <div id="task-completed" class="task-container bg-body-secondary p-3 rounded-4 border border-success-subtle" data-task-list-id="{{ $taskList->id }}">
                 @foreach($tasks->where('is_completed', true) as $task)
@@ -166,7 +166,7 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="dropdown-item text-danger">
-                                                <i class="bi bi-trash3 me-2"></i> Hapus
+                                                <i class="bi bi-trash3 me-2"></i> Delete
                                             </button>
                                         </form>
                                     </li>
@@ -182,11 +182,11 @@
                             </p>                            
                             <p>
                                 @if($task->priority === 'Tinggi')
-                                    <span class="text-danger"><i class="bi bi-flag-fill me-1"></i> Tinggi</span>
+                                    <span class="text-danger"><i class="bi bi-flag-fill me-1"></i> High</span>
                                 @elseif($task->priority === 'Sedang')
-                                    <span class="text-warning"><i class="bi bi-flag-fill me-1"></i> Sedang</span>
+                                    <span class="text-warning"><i class="bi bi-flag-fill me-1"></i> Medium</span>
                                 @else
-                                    <span class="text-success"><i class="bi bi-flag-fill me-1"></i> Rendah</span>
+                                    <span class="text-success"><i class="bi bi-flag-fill me-1"></i> Low</span>
                                 @endif
                             </p>                    
                         </div>

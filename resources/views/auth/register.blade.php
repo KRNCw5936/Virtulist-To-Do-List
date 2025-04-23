@@ -129,7 +129,7 @@ a:hover {
         </div>
         <div class="container">
             <div class="app-name">VIRTULIST</div>
-            <h2>Pendaftaran Akun</h2>
+            <h2>Account Registration</h2>
             <form action="{{ route('register') }}" method="POST">
                 @csrf
                 <div class="mb-3">
@@ -139,16 +139,16 @@ a:hover {
                     <input type="email" name="email" id="email" class="form-control" placeholder="Email" required>
                 </div>
                 <div class="mb-3">
-                    <input type="password" name="password" id="password" class="form-control" placeholder="Kata Sandi" required>
+                    <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
                 </div>
                 <div class="mb-3">
-                    <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="Konfirmasi Kata Sandi" required>
+                    <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="Password Confirmation" required>
                 </div>
                 <div class="mb-3">
-                    <button type="submit" class="btn btn-primary">Daftar</button>
+                    <button type="submit" class="btn btn-primary">Register</button>
                 </div>
                 <div class="text-center">
-                    <p>Sudah punya akun?  <a href="{{ route('login') }}">Masuk di sini!</a></p>
+                    <p>Have an account?  <a href="{{ route('login') }}">login Here!</a></p>
                 </div>
             </form>
         </div>

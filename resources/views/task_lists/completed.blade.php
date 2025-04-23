@@ -1,21 +1,21 @@
 @extends('layouts.app')
 
-@section('title', 'Task Selesai')
+@section('title', 'Completed Tasks')
 
 @section('content')
 <div class="container py-5 px-4">
-    <h2 class="text-black mb-4 w-100">✅ Task yang Sudah Selesai</h2>
+    <h2 class="text-black mb-4 w-100">✅ Completed Tasks</h2>
 
     @if ($completedTasks->isEmpty())
-        <p class="text-muted text-center mt-4">Belum ada tugas yang selesai!</p>
+        <p class="text-muted text-center mt-4">No tasks completed yet!</p>
     @else
         <div class="row g-4 justify-content-start">
             @foreach ($completedTasks as $task)
                 @php
                     $taskColors = [
-                        'sekolah' => ['#1E90FF', '#104E8B', '🎓'],
-                        'pribadi' => ['#32CD32', '#228B22', '🌱'],
-                        'pekerjaan' => ['#00CED1', '#008B8B', '💼'],
+                        'School' => ['#1E90FF', '#104E8B', '🎓'],
+                        'Private' => ['#32CD32', '#228B22', '🌱'],
+                        'Work' => ['#00CED1', '#008B8B', '💼'],
                     ];
                     $color = $taskColors[$task->project_type][0] ?? '#808080';
                     $darkColor = $taskColors[$task->project_type][1] ?? '#505050';
@@ -40,7 +40,7 @@
                                     aria-labelledby="dropdownMenuButton{{ $task->id }}">
                                  <li>
                                         <a class="dropdown-item" href="{{ route('task-lists.tasks.index', $task->id) }}">
-                                         <i class="bi bi-eye me-2"></i> Lihat
+                                         <i class="bi bi-eye me-2"></i> See
                                         </a>
                                     </li>
                                     <li>
@@ -54,7 +54,7 @@
                                          @csrf
                                             @method('DELETE')
                                             <button type="submit" class="dropdown-item text-danger">
-                                             <i class="bi bi-trash me-2"></i> Hapus
+                                             <i class="bi bi-trash me-2"></i> Delete
                                             </button>
                                         </form>
                                     </li>

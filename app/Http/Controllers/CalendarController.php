@@ -16,9 +16,9 @@ class CalendarController extends Controller
     
         $events = $tasks->map(function ($task) {
             $colors = [
-                'sekolah' => ['#1E90FF', '#104E8B', '🎓 '],
-                'pribadi' => ['#32CD32', '#228B22', '🌱 '],
-                'pekerjaan' => ['#00CED1', '#008B8B', '💼 '],
+                'school' => ['#1E90FF', '#104E8B', '🎓 '],
+                'private' => ['#32CD32', '#228B22', '🌱 '],
+                'work' => ['#00CED1', '#008B8B', '💼 '],
             ];
         
             $type = strtolower($task->project_type);

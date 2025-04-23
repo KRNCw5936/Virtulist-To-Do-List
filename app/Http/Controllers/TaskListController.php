@@ -66,6 +66,7 @@ class TaskListController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'name' => 'required',
             'project_type' => 'required',
@@ -165,4 +166,33 @@ class TaskListController extends Controller
 
         return view('task_lists.completed', compact('completedTasks'));
     }
+
+    public static function countUpcomingNotifications()
+    {
+        return TaskList::where('user_id', Auth::id())
+            ->where('is_complete', false)
+            ->whereDate('end_date', '<=', Carbon::now()->addDay())
+            ->whereDate('end_date', '>=', Carbon::now())
+            ->count();
+    }
+
+    public function notif()
+    {
+        $userId = Auth::id();
+
+        // Ambil semua task yang mendekati deadline
+        $notifTasks = TaskList::where('user_id', $userId)
+            ->where('is_complete', false)
+            ->whereBetween('end_date', [
+                Carbon::today()->startOfDay(),
+                Carbon::today()->addDays(2)->endOfDay()
+            ])
+            ->get();
+
+        // Simpan flag bahwa notifikasi sudah "dilihat"
+        session(['notif_viewed' => true]);
+
+        return view('homepage.notif', compact('notifTasks'));
+    }
+    
 }

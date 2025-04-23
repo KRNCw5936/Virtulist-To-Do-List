@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Kalender Proyek')
+@section('title', 'Project Calendar')
 
 @section('content')
 <div class="container mt-4">
-    <h3 class="text-black mb-4">📅 Kalender Proyek</h3>
+    <h3 class="text-black mb-4">📅 Project Calendar</h3>
 
     <div class="card shadow-sm border border-secondary rounded">
         <div class="card-body p-4">
@@ -88,19 +88,19 @@
         transform: scale(1.02);
     }
 
-    .event-sekolah {
+    .event-school {
         background-color: #1E90FF !important;
         border: 2px solid #104E8B !important;
         color: #fff !important;
     }
 
-    .event-pribadi {
+    .event-private {
         background-color: #32CD32 !important;
         border: 2px solid #228B22 !important;
         color: #fff !important;
     }
 
-    .event-pekerjaan {
+    .event-work {
         background-color: #0a82b5 !important;
         border: 2px solid #0066ec !important;
         color: #fff !important;
@@ -156,11 +156,11 @@
                 let eventType = info.event.title.split(' ')[0];
 
                 if (eventType === '🎓') {
-                    info.el.classList.add('event-sekolah');
+                    info.el.classList.add('event-school');
                 } else if (eventType === '🌱') {
-                    info.el.classList.add('event-pribadi');
+                    info.el.classList.add('event-private');
                 } else if (eventType === '💼') {
-                    info.el.classList.add('event-pekerjaan');
+                    info.el.classList.add('event-work');
                 }
 
                 // --- Tambahan indikator tenggat waktu ---

@@ -67,22 +67,22 @@
         }
 
         .sidebar a.active {
-    background: transparent;
-    color: #000;
-    font-weight: 500;
-    position: relative;
-}
+            background: transparent;
+            color: #000;
+            font-weight: 500;
+            position: relative;
+        }
 
-.sidebar a.active::after {
-    content: "";
-    position: absolute;
-    bottom: 4px;
-    left: 20px;
-    right: 20px;
-    height: 2px;
-    background-color: #000;
-    border-radius: 2px;
-}
+        .sidebar a.active::after {
+            content: "";
+            position: absolute;
+            bottom: 4px;
+            left: 20px;
+            right: 20px;
+            height: 2px;
+            background-color: #000;
+            border-radius: 2px;
+        }
 
 
         .sidebar-toggle {
@@ -137,23 +137,53 @@
                 left: 0;
                 text-align: center;
             }
+
+            .notif-box {
+                background-color: #ffffff;
+                padding: 8px 12px;
+                border-radius: 10px;
+                box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+            }
         }
     </style>
 </head>
 <body>
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
-        <a href="{{ route('task-lists.index') }}" class="brand">VIRTULIST</a>
+        <a href="{{ route('homepage.dashboard') }}" class="brand">VIRTULIST</a>
         @auth
-        <a href="{{ route('homepage.dashboard') }}" class="ajax-link @if(request()->routeIs('homepage.dashboard')) active @endif">Dasbor</a>
-        <a href="{{ route('homepage.home') }}" class="ajax-link @if(request()->routeIs('homepage.home')) active @endif">Buat Tugas</a>
-        <a href="{{ route('task-lists.index') }}" class="ajax-link @if(request()->routeIs('task-lists.index')) active @endif">Daftar Tugas</a>
-        <a href="{{ route('calendar.index') }}" class="ajax-link @if(request()->routeIs('calendar.index')) active @endif">Kalender</a>
-        <a href="{{ route('task-lists.completed') }}" class="ajax-link @if(request()->routeIs('task-lists.completed')) active @endif">Tugas Selesai</a>        
+
+        <div class="notif-wrapper me-3 position-relative">
+            <a href="{{ route('homepage.notif') }}" class="notif-box d-inline-block text-decoration-none">
+                <i class="bi bi-bell fs-4 @if($notifCount > 0) text-danger @endif"></i>
+                @if($notifCount > 0)
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {{ $notifCount }}
+                    </span>
+                @endif
+            </a>
+        </div>        
+                
+        <a href="{{ route('homepage.dashboard') }}" class="ajax-link @if(request()->routeIs('homepage.dashboard')) active @endif">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+        </a>
+        <a href="{{ route('homepage.home') }}" class="ajax-link @if(request()->routeIs('homepage.home')) active @endif">
+            <i class="fas fa-plus-circle"></i> Create To-Do
+        </a>
+        <a href="{{ route('task-lists.index') }}" class="ajax-link @if(request()->routeIs('task-lists.index')) active @endif">
+            <i class="fas fa-list-ul"></i> List Tasks
+        </a>
+        <a href="{{ route('calendar.index') }}" class="ajax-link @if(request()->routeIs('calendar.index')) active @endif">
+            <i class="fas fa-calendar-alt"></i> Calendar
+        </a>
+        <a href="{{ route('task-lists.completed') }}" class="ajax-link @if(request()->routeIs('task-lists.completed')) active @endif">
+            <i class="fas fa-check-circle"></i> Completed Task
+        </a>
+              
         <form action="{{ route('logout') }}" method="POST" class="d-flex align-items-center mt-3 px-3">
             @csrf
             <button type="submit" class="btn btn-danger btn-sm px-4 d-flex align-items-center w-100">
-                <i class="bi bi-box-arrow-right me-2"></i> Keluar
+                <i class="bi bi-box-arrow-right me-2"></i> Log Out
             </button>
         </form>        
         @endauth

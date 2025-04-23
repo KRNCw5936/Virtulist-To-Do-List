@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - VIRTULIST</title>
+    <title>Forgot Password - VIRTULIST</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cedarville+Cursive&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
@@ -203,63 +203,26 @@ a:hover {
         </div>
         <div class="container">
             <div class="app-name">VIRTULIST</div>
+            @if (session('status'))
+                <div style="color: green; text-align: center; margin-bottom: 10px;">
+                    {{ session('status') }}
+                </div>
+            @endif
             @if (session('error'))
                 <div style="color: red; text-align: center; margin-bottom: 10px;">
                     {{ session('error') }}
                 </div>
             @endif
-            <form action="{{ route('login') }}" method="POST" onsubmit="return validateForm()">
+            <form action="{{ url('/forgot-password') }}" method="POST">
                 @csrf
-                <input type="email" class="form-control" name="email" id="email" placeholder="Email" value="{{ old('email') }}" required>
+                <input type="email" name="email" class="form-control" placeholder="Masukkan email Anda" required>
                 @error('email')
                     <div style="color: red; font-size: 14px;">{{ $message }}</div>
                 @enderror
-                
-                <div class="password-container">
-                    <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
-                    <i class="eye-icon" id="eye-icon" onclick="togglePassword()">👁️</i>
-                </div>
-                <p style="text-align: left; margin-top: 5px;">
-                    <a href="{{ route('password.request') }}">Forgot Password?</a>
-                </p>                
-                @error('password')
-                    <div style="color: red; font-size: 14px;">{{ $message }}</div>
-                @enderror
-                
-                <button type="submit" class="btn-primary">Login</button>
+                <button type="submit" class="btn-primary">Send Password Reset Link</button>
             </form>
-            <div class="text-center">
-                <p>Or Login with Google</p>
-                <a href="{{ route('auth.google') }}" class="btn-google">
-                    <img src="{{ asset('assets/image/google-logo.png') }}" alt="Google Logo">
-                    <span>Google</span>
-                </a>
-            </div>
-            <p>Don't have an account? <a href="{{ route('register') }}">Register here!</a></p>
+            <p><a href="{{ route('login') }}">Back to Login</a></p>
         </div>
     </div>
-    <script>
-        function validateForm() {
-            var email = document.getElementById("email").value;
-            var password = document.getElementById("password").value;
-            if (email === "" || password === "") {
-                alert("Email dan Password harus diisi!");
-                return false;
-            }
-            return true;
-        }
-        
-        function togglePassword() {
-            var passwordInput = document.getElementById("password");
-            var eyeIcon = document.getElementById("eye-icon");
-            if (passwordInput.type === "password") {
-                passwordInput.type = "text";
-                eyeIcon.textContent = "🙈";
-            } else {
-                passwordInput.type = "password";
-                eyeIcon.textContent = "👁️";
-            }
-        }
-    </script>
 </body>
 </html>
