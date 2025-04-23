@@ -23,35 +23,35 @@
     <section class="mt-4">
         <h2>Concise Statistics</h2>
         <div class="card-container">
-            <div class="card">
+            <div class="card" style="background-color: #f8d7da; color: #721c24;">
                 <div class="card-title">Task List Total</div>
                 <div class="card-value">{{ $totalTaskList }}</div>
                 <div class="card-info">
                 </div>
             </div>
 
-            <div class="card">
+            <div class="card" style="background-color: #d4edda; color: #155724;">
                 <div class="card-title">Task List Completed</div>
                 <div class="card-value">{{ $completedTaskList }}</div>
                 <div class="card-info up">
                 </div>
             </div>
 
-            <div class="card">
+            <div class="card" style="background-color: #cce5ff; color: #004085;">
                 <div class="card-title">Total Task</div>
                 <div class="card-value">{{ $totalTask }}</div>
                 <div class="card-info">
                 </div>
             </div>
 
-            <div class="card">
+            <div class="card" style="background-color: #fff3cd; color: #856404;">
                 <div class="card-title">Task Completed</div>
                 <div class="card-value">{{ $completedTask }}</div>
                 <div class="card-info up">
                 </div>
             </div>
 
-            <div class="card">
+            <div class="card" style="background-color: #e2e3e5; color: #383d41;">
                 <div class="card-title">Task in Progress</div>
                 <div class="card-value">{{ $ongoingTask }}</div>
                 <div class="card-info down">
