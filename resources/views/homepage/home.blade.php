@@ -128,7 +128,7 @@
     </div>
 @endsection --}}
 
-@extends('layouts.app')
+{{-- @extends('layouts.app')
 
 @section('title', 'Create To-Do')
 
@@ -447,4 +447,458 @@
             border-radius: 10px 10px 0 0 !important;
         }
     </style>
+@endsection --}}
+
+@extends('layouts.app')
+
+@section('title', 'Create To-Do')
+
+@section('content')
+    <div class="container py-4">
+        <!-- Header Section -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 class="mb-0"><i class="bi bi-lightbulb text-warning"></i> Come on, do your homework!</h3>
+                <p class="text-muted mb-0">Organize your tasks efficiently</p>
+            </div>
+            <a href="{{ route('task-lists.create') }}" class="btn btn-primary">
+                <i class="bi bi-plus-lg"></i> Create To-Do
+            </a>
+        </div>
+
+        <!-- Search and Sort Controls -->
+        <div class="row mb-4 g-3">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input type="text" id="searchInput" class="form-control" placeholder="Search task lists...">
+                    <button class="btn btn-outline-secondary" type="button" id="clearSearch">
+                        <i class="bi bi-x"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="d-flex align-items-center">
+                    <span class="me-2">Sort by:</span>
+                    <select class="form-select" id="sortSelect">
+                        <option value="name-asc">Name (A-Z)</option>
+                        <option value="name-desc">Name (Z-A)</option>
+                        <option value="date-asc">Date (Oldest)</option>
+                        <option value="date-desc" selected>Date (Newest)</option>
+                        <option value="progress-asc">Progress (Low-High)</option>
+                        <option value="progress-desc">Progress (High-Low)</option>
+                        <option value="pinned">Pinned First</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task Lists Section -->
+        <div class="mb-5">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5>Your Task Collections</h5>
+                <div class="text-muted small" id="taskCount">
+                    Showing {{ $taskLists->count() }} task lists
+                </div>
+            </div>
+            
+            @php
+                $taskColors = [
+                    'school' => ['#6366f1', '#4f46e5', '🎓'], // Indigo (School)
+                    'private' => ['#10b981', '#059669', '🌱'], // Emerald (Personal)
+                    'work' => ['#f59e0b', '#d97706', '💼'], // Amber (Work)
+                    'default' => ['#64748b', '#475569', '📋'] // Slate (Default)
+                ];
+            @endphp
+
+            <div class="row g-3" id="taskListContainer">
+                @foreach ($taskLists as $taskList)
+                    @php
+                        $category = strtolower($taskList->project_type ?? 'default');
+                        $color = $taskColors[$category][0] ?? $taskColors['default'][0];
+                        $darkColor = $taskColors[$category][1] ?? $taskColors['default'][1];
+                        $icon = $taskColors[$category][2] ?? $taskColors['default'][2];
+                        $completionPercentage = $taskList->tasks->count() > 0 
+                            ? ($taskList->tasks->where('is_completed', true)->count() / $taskList->tasks->count()) * 100 
+                            : 0;
+                    @endphp
+
+                    <div class="col-6 col-md-4 col-lg-3 task-card" 
+                         data-name="{{ strtolower($taskList->name) }}"
+                         data-date="{{ $taskList->created_at->timestamp }}"
+                         data-progress="{{ $completionPercentage }}"
+                         data-pinned="{{ $taskList->is_pinned ? '1' : '0' }}">
+                        <div class="card h-100 border-0 shadow-sm overflow-hidden position-relative">
+                            <!-- Card Header with Pinned Indicator -->
+                            <div class="card-header d-flex justify-content-between align-items-center" 
+                                 style="background: linear-gradient(135deg, {{ $color }}, {{ $darkColor }});">
+                                <div class="d-flex align-items-center">
+                                    @if ($taskList->is_pinned)
+                                        <i class="bi bi-pin-fill text-white me-2"></i>
+                                    @endif
+                                    <span class="text-white fw-semibold text-truncate" style="max-width: 150px;">
+                                        {{ $icon }} {{ $taskList->name }}
+                                    </span>
+                                </div>
+                                
+                                <!-- Dropdown Menu -->
+                                <div class="dropdown">
+                                    <button class="btn btn-sm p-0 border-0 bg-transparent" type="button" 
+                                        id="dropdownMenu{{ $taskList->id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-three-dots-vertical text-white"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end shadow dropdown-menu-scrollable" 
+                                        aria-labelledby="dropdownMenu{{ $taskList->id }}">
+                                        <li>
+                                            <a class="dropdown-item d-flex align-items-center" 
+                                               href="{{ route('task-lists.tasks.index', $taskList->id) }}">
+                                                <i class="bi bi-list-check me-2"></i> View Tasks
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item d-flex align-items-center" 
+                                               href="{{ route('task-lists.edit', $taskList->id) }}">
+                                                <i class="bi bi-pencil-square me-2"></i> Edit Task List
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <button class="dropdown-item d-flex align-items-center" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#taskListModal{{ $taskList->id }}">
+                                                <i class="bi bi-info-circle me-2"></i> Details
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <form action="{{ route('task-lists.togglePin', $taskList->id) }}" method="POST">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button type="submit" class="dropdown-item d-flex align-items-center w-100">
+                                                    <i class="bi {{ $taskList->is_pinned ? 'bi-pin-angle' : 'bi-pin' }} me-2"></i>
+                                                    {{ $taskList->is_pinned ? 'Unpin' : 'Pin' }}
+                                                </button>
+                                            </form>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <form action="{{ route('task-lists.destroy', $taskList->id) }}" method="POST" 
+                                                  onsubmit="return confirm('Are you sure you want to delete this task list?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="dropdown-item d-flex align-items-center text-danger">
+                                                    <i class="bi bi-trash me-2"></i> Delete
+                                                </button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <!-- Card Body -->
+                            <div class="card-body">
+                                <!-- Progress Bar -->
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between small mb-1">
+                                        <span>Progress</span>
+                                        <span>{{ round($completionPercentage) }}%</span>
+                                    </div>
+                                    <div class="progress" style="height: 6px;">
+                                        <div class="progress-bar" 
+                                             role="progressbar" 
+                                             style="width: {{ $completionPercentage }}%; background-color: {{ $color }}"
+                                             aria-valuenow="{{ $completionPercentage }}" 
+                                             aria-valuemin="0" 
+                                             aria-valuemax="100">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Task Count -->
+                                <div class="d-flex justify-content-between small text-muted mb-2">
+                                    <span>Tasks:</span>
+                                    <span>{{ $taskList->tasks->count() }}</span>
+                                </div>
+                                
+                                <!-- Completed Count -->
+                                <div class="d-flex justify-content-between small text-muted mb-2">
+                                    <span>Completed:</span>
+                                    <span>{{ $taskList->tasks->where('is_completed', true)->count() }}</span>
+                                </div>
+                                
+                                <!-- Date Range -->
+                                <div class="d-flex justify-content-between small text-muted">
+                                    <span>Date Range:</span>
+                                    <span>
+                                        {{ \Carbon\Carbon::parse($taskList->start_date)->format('M d') }} - 
+                                        {{ \Carbon\Carbon::parse($taskList->end_date)->format('M d') }}
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <!-- Card Footer -->
+                            <div class="card-footer bg-transparent border-top-0 pt-0">
+                                <small class="text-muted">
+                                    Created: {{ \Carbon\Carbon::parse($taskList->created_at)->format('M d, Y') }}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal for Task List Details -->
+                    <div class="modal fade" id="taskListModal{{ $taskList->id }}" tabindex="-1" 
+                         aria-labelledby="taskListModalLabel{{ $taskList->id }}" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header" 
+                                     style="background: linear-gradient(135deg, {{ $color }}, {{ $darkColor }});">
+                                    <h5 class="modal-title text-white" id="taskListModalLabel{{ $taskList->id }}">
+                                        {{ $icon }} {{ $taskList->name }}
+                                    </h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <h6 class="fw-semibold">Description</h6>
+                                        <p>{{ $taskList->description ?? 'No description provided' }}</p>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <h6 class="fw-semibold">Project Type</h6>
+                                            <p>{{ $taskList->project_type ?? '-' }}</p>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <h6 class="fw-semibold">Status</h6>
+                                            <p>
+                                                @if($taskList->end_date < now())
+                                                    <span class="badge bg-danger">Overdue</span>
+                                                @elseif($completionPercentage == 100)
+                                                    <span class="badge bg-success">Completed</span>
+                                                @else
+                                                    <span class="badge bg-warning text-dark">In Progress</span>
+                                                @endif
+                                            </p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <h6 class="fw-semibold">Start Date</h6>
+                                            <p>{{ \Carbon\Carbon::parse($taskList->start_date)->format('M d, Y') }}</p>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <h6 class="fw-semibold">End Date</h6>
+                                            <p>{{ \Carbon\Carbon::parse($taskList->end_date)->format('M d, Y') }}</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <h6 class="fw-semibold">Task Summary</h6>
+                                        <div class="d-flex justify-content-between small mb-1">
+                                            <span>Total Tasks</span>
+                                            <span>{{ $taskList->tasks->count() }}</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between small mb-1">
+                                            <span>Completed</span>
+                                            <span>{{ $taskList->tasks->where('is_completed', true)->count() }}</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between small">
+                                            <span>Remaining</span>
+                                            <span>{{ $taskList->tasks->where('is_completed', false)->count() }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <a href="{{ route('task-lists.tasks.index', $taskList->id) }}" class="btn btn-primary">
+                                        <i class="bi bi-list-check me-1"></i> View Tasks
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+
+                @if ($taskLists->isEmpty())
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body text-center py-5">
+                                <i class="bi bi-clipboard2-x text-muted" style="font-size: 2.5rem;"></i>
+                                <h5 class="mt-3 mb-2">No Task Lists Created Yet</h5>
+                                <p class="text-muted">Get started by creating your first task list</p>
+                                <a href="{{ route('task-lists.create') }}" class="btn btn-primary mt-2">
+                                    <i class="bi bi-plus-lg"></i> Create Task List
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border-radius: 10px;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Enhanced Dropdown Styles */
+        .dropdown-menu {
+            border-radius: 8px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        .dropdown-menu-scrollable {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .dropdown-menu-scrollable::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .dropdown-menu-scrollable::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .dropdown-menu-scrollable::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+        
+        .dropdown-menu-scrollable::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+        
+        .dropdown-item {
+            padding: 0.5rem 1rem;
+            border-radius: 0;
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .dropdown-divider {
+            margin: 0;
+        }
+        
+        .progress {
+            border-radius: 3px;
+            background-color: #e9ecef;
+        }
+        
+        .modal-header {
+            border-radius: 10px 10px 0 0 !important;
+        }
+
+        /* Search and sort controls */
+        #searchInput {
+            transition: all 0.3s ease;
+        }
+
+        #searchInput:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 0.25rem rgba(99, 102, 241, 0.25);
+        }
+
+        #sortSelect {
+            max-width: 200px;
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const clearSearch = document.getElementById('clearSearch');
+            const sortSelect = document.getElementById('sortSelect');
+            const taskListContainer = document.getElementById('taskListContainer');
+            const taskCount = document.getElementById('taskCount');
+            const taskCards = Array.from(document.querySelectorAll('.task-card'));
+            const originalOrder = [...taskCards];
+
+            // Function to filter and sort task cards
+            function updateTaskList() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const sortValue = sortSelect.value;
+                
+                // Filter cards based on search term
+                const filteredCards = originalOrder.filter(card => {
+                    const name = card.dataset.name;
+                    return name.includes(searchTerm);
+                });
+
+                // Sort cards based on selected option
+                filteredCards.sort((a, b) => {
+                    switch(sortValue) {
+                        case 'name-asc':
+                            return a.dataset.name.localeCompare(b.dataset.name);
+                        case 'name-desc':
+                            return b.dataset.name.localeCompare(a.dataset.name);
+                        case 'date-asc':
+                            return parseInt(a.dataset.date) - parseInt(b.dataset.date);
+                        case 'date-desc':
+                            return parseInt(b.dataset.date) - parseInt(a.dataset.date);
+                        case 'progress-asc':
+                            return parseFloat(a.dataset.progress) - parseFloat(b.dataset.progress);
+                        case 'progress-desc':
+                            return parseFloat(b.dataset.progress) - parseFloat(a.dataset.progress);
+                        case 'pinned':
+                            return parseInt(b.dataset.pinned) - parseInt(a.dataset.pinned);
+                        default:
+                            return 0;
+                    }
+                });
+
+                // Clear the container
+                taskListContainer.innerHTML = '';
+
+                // Add filtered and sorted cards back to the container
+                if (filteredCards.length === 0) {
+                    taskListContainer.innerHTML = `
+                        <div class="col-12">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body text-center py-5">
+                                    <i class="bi bi-search text-muted" style="font-size: 2.5rem;"></i>
+                                    <h5 class="mt-3 mb-2">No matching task lists found</h5>
+                                    <p class="text-muted">Try adjusting your search or filter</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    filteredCards.forEach(card => {
+                        taskListContainer.appendChild(card);
+                    });
+                }
+
+                // Update task count
+                taskCount.textContent = `Showing ${filteredCards.length} of ${originalOrder.length} task lists`;
+            }
+
+            // Event listeners
+            searchInput.addEventListener('input', updateTaskList);
+            clearSearch.addEventListener('click', () => {
+                searchInput.value = '';
+                updateTaskList();
+                searchInput.focus();
+            });
+            sortSelect.addEventListener('change', updateTaskList);
+
+            // Initialize
+            updateTaskList();
+        });
+    </script>
 @endsection
