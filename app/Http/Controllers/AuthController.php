@@ -93,5 +93,4 @@ class AuthController extends Controller
         Auth::login($user, true);
         return redirect()->route('homepage.dashboard');
     }
-    
 }

@@ -4,7 +4,9 @@
 
 @section('content')
 <div class="container py-5 px-4">
-    <h2 class="text-black mb-4">📋 To-Do List</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-black fw-bold">📋 To-Do List</h2>
+    </div>
 
     @php
         $taskCategories = [
@@ -16,50 +18,76 @@
         ];
 
         $taskColors = [
-            'School' => ['#1E90FF', '#104E8B', '🎓'],
-            'Private' => ['#32CD32', '#228B22', '🌱'],
-            'Work' => ['#00CED1', '#008B8B', '💼'],
+            'School' => ['bg-blue-gradient', '🎓'],
+            'Private' => ['bg-green-gradient', '🌱'],
+            'Work' => ['bg-teal-gradient', '💼'],
         ];
     @endphp
 
     @foreach ($taskCategories as $title => $tasks)
         @if ($tasks->isNotEmpty())
-            <h4 class="mt-5 fw-bold text-primary">{{ $title }}</h4>
+            <div class="section-header mb-3 mt-5 d-flex align-items-center">
+                <h4 class="fw-bold mb-0 text-muted">{{ $title }}</h4>
+                <span class="badge bg-light text-dark ms-2">{{ $tasks->count() }}</span>
+            </div>
+            
             <div class="row g-4">
                 @foreach ($tasks as $task)
                     @php
-                        $color = $taskColors[$task->project_type][0] ?? '#808080';
-                        $darkColor = $taskColors[$task->project_type][1] ?? '#505050';
-                        $icon = $taskColors[$task->project_type][2] ?? '📝';
-                        $startDate = \Carbon\Carbon::parse($task->start_date)->format('d/m/Y');
-                        $endDate = \Carbon\Carbon::parse($task->end_date)->format('d/m/Y');
+                        $colorClass = $taskColors[$task->project_type][0] ?? 'bg-gray-gradient';
+                        $icon = $taskColors[$task->project_type][1] ?? '📝';
+                        $startDate = \Carbon\Carbon::parse($task->start_date)->format('d M Y');
+                        $endDate = \Carbon\Carbon::parse($task->end_date)->format('d M Y');
                     @endphp
 
-                    <div class="col-lg-3 col-md-4 col-sm-6 d-flex justify-content-center">
-                        <div class="card shadow-lg border-0 rounded-3 hover-effect w-100"
-                             style="background: linear-gradient(135deg, {{ $color }}, {{ $darkColor }});">
-                            <div class="card-body text-center text-white px-3 py-4">
-                                <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <h5 class="card-title text-truncate text-white fw-bold mb-0" style="max-width: 70%;">
-                                        {{ $icon }} {{ $task->name }}
-                                    </h5>
+                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+                        <div class="card task-card border-0 shadow-sm h-100">
+                            <div class="card-body p-4 d-flex flex-column">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div class="task-icon {{ $colorClass }} rounded-circle d-flex align-items-center justify-content-center">
+                                        {{ $icon }}
+                                    </div>
                                     <div class="dropdown">
-                                        <button class="btn btn-light btn-sm" type="button" 
-                                            id="dropdownMenuButton{{ $task->id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <button class="btn btn-sm btn-link text-muted dropdown-toggle no-caret" 
+                                                type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                             <i class="bi bi-three-dots-vertical"></i>
                                         </button>
-                                        <ul class="dropdown-menu dropdown-menu-end" 
-                                            aria-labelledby="dropdownMenuButton{{ $task->id }}">
-                                            <li><a class="dropdown-item" href="{{ route('task-lists.tasks.index', $task->id) }}">
-                                                <i class="bi bi-eye me-2"></i> See</a></li>
-                                            <li><a class="dropdown-item" href="{{ route('task-lists.edit', $task->id) }}">
-                                                <i class="bi bi-pencil me-2"></i> Edit</a></li>
+                                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2">
                                             <li>
-                                                <form action="{{ route('task-lists.destroy', $task->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus?');">
+                                                <a class="dropdown-item rounded-2 d-flex align-items-center py-2 px-3" 
+                                                   href="{{ route('task-lists.tasks.index', $task->id) }}">
+                                                    <i class="bi bi-eye me-3"></i>View Details
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item rounded-2 d-flex align-items-center py-2 px-3" 
+                                                   href="{{ route('task-lists.edit', $task->id) }}">
+                                                    <i class="bi bi-pencil me-3"></i>Edit Task
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item rounded-2 d-flex align-items-center py-2 px-3" 
+                                                   href="{{ route('task-lists.toggle-status', $task->id) }}"
+                                                   onclick="event.preventDefault(); document.getElementById('toggle-status-{{ $task->id }}').submit();">
+                                                    <i class="bi bi-check-circle me-3"></i>
+                                                    {{ $task->is_complete ? 'Mark as Progress' : 'Mark as Complete' }}
+                                                </a>
+                                                <form id="toggle-status-{{ $task->id }}" 
+                                                      action="{{ route('task-lists.toggle-status', $task->id) }}" 
+                                                      method="POST" style="display: none;">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                </form>
+                                            </li>
+                                            <li><hr class="dropdown-divider my-2"></li>
+                                            <li>
+                                                <form action="{{ route('task-lists.destroy', $task->id) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="dropdown-item text-danger">
-                                                        <i class="bi bi-trash me-2"></i> Delete
+                                                    <button type="submit" 
+                                                            class="dropdown-item rounded-2 d-flex align-items-center py-2 px-3 text-danger"
+                                                            onclick="return confirm('Are you sure you want to delete this task?');">
+                                                        <i class="bi bi-trash me-3"></i>Delete Task
                                                     </button>
                                                 </form>
                                             </li>
@@ -67,20 +95,20 @@
                                     </div>
                                 </div>
 
-                                <p class="fw-light text-white" style="font-size: 13px;">
-                                    {{ $startDate }} - {{ $endDate }}
-                                </p>
-
-                                <a href="{{ route('task-lists.toggle-status', $task->id) }}"
-                                   class="badge {{ $task->is_complete ? 'bg-success' : 'bg-warning' }} text-decoration-none"
-                                   onclick="event.preventDefault(); document.getElementById('toggle-status-{{ $task->id }}').submit();">
-                                    {{ $task->is_complete ? 'Complete' : 'Progress' }}
-                                </a>
-
-                                <form id="toggle-status-{{ $task->id }}" action="{{ route('task-lists.toggle-status', $task->id) }}" method="POST" style="display: none;">
-                                    @csrf
-                                    @method('PATCH')
-                                </form>
+                                <h5 class="card-title fw-bold mb-2 text-truncate">{{ $task->name }}</h5>
+                                
+                                <div class="task-dates text-muted mb-3">
+                                    <small class="d-flex align-items-center">
+                                        <i class="bi bi-calendar3 me-2"></i>
+                                        {{ $startDate }} - {{ $endDate }}
+                                    </small>
+                                </div>
+                                
+                                <div class="mt-auto">
+                                    <span class="badge {{ $task->is_complete ? 'bg-success' : 'bg-warning' }} text-white rounded-pill">
+                                        {{ $task->is_complete ? 'Completed' : 'In Progress' }}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -90,26 +118,82 @@
     @endforeach
 
     @if ($todayTasks->isEmpty() && $yesterdayTasks->isEmpty() && $lastWeekTasks->isEmpty() && $lastMonthTasks->isEmpty() && $olderTasks->isEmpty())
-        <p class="text-muted text-center mt-5">🚀 Tidak ada tugas yang tersedia.</p>
+        <div class="empty-state text-center py-5 my-5">
+            <div class="empty-state-icon bg-light rounded-circle p-4 d-inline-block mb-3">
+                <i class="bi bi-clipboard2-check fs-1 text-muted"></i>
+            </div>
+            <h4 class="fw-bold text-muted mb-3">No Tasks Found</h4>
+            <p class="text-muted mb-4">You don't have any tasks yet. Start by creating a new task!</p>
+            <a href="{{ route('task-lists.create') }}" class="btn btn-primary rounded-pill px-4">
+                <i class="bi bi-plus-lg me-2"></i>Create Task
+            </a>
+        </div>
     @endif
 </div>
 
 <style>
-    .hover-effect {
-        transition: all 0.3s ease-in-out;
+    .task-card {
+        transition: all 0.2s ease;
+        border-radius: 12px !important;
+        border: 1px solid rgba(0, 0, 0, 0.05);
     }
-
-    .hover-effect:hover {
+    
+    .task-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
     }
-
+    
+    .task-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+    
+    .bg-blue-gradient {
+        background: linear-gradient(135deg, #1E90FF, #104E8B);
+        color: white;
+    }
+    
+    .bg-green-gradient {
+        background: linear-gradient(135deg, #32CD32, #228B22);
+        color: white;
+    }
+    
+    .bg-teal-gradient {
+        background: linear-gradient(135deg, #00CED1, #008B8B);
+        color: white;
+    }
+    
+    .bg-gray-gradient {
+        background: linear-gradient(135deg, #808080, #505050);
+        color: white;
+    }
+    
+    .section-header {
+        border-bottom: 2px solid #f0f0f0;
+        padding-bottom: 8px;
+    }
+    
+    .dropdown-toggle.no-caret::after {
+        display: none !important;
+    }
+    
+    .dropdown-menu {
+        border-radius: 12px !important;
+        min-width: 220px;
+    }
+    
+    .empty-state-icon {
+        background-color: #f8f9fa;
+    }
+    
     .card-title {
-        font-size: 16px;
+        font-size: 1.1rem;
+        line-height: 1.4;
     }
-
-    .card-body {
-        padding: 1.25rem;
+    
+    .task-dates small {
+        font-size: 0.85rem;
     }
 </style>
 @endsection
